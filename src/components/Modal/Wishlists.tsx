@@ -1,6 +1,5 @@
 "use client";
 
-import { toggleModal } from "@/redux/Modal/modalWindow";
 import {
   handleDecrementQuantity,
   handleIncrementQuantity,
@@ -26,22 +25,6 @@ export default function Wishlists() {
 
   return (
     <>
-      <div
-        className="ml-auto flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#4b4b4b]"
-        onClick={() => dispatch(toggleModal())}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35"
-          height="35"
-          fill="#f3f3f3"
-          className="bi bi-x"
-          viewBox="0 0 16 16"
-        >
-          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-        </svg>
-      </div>
-
       <h2 className="mt-[32px] text-center text-4xl font-bold italic text-white underline">
         Wish Lists ({wishlists.length})
       </h2>

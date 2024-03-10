@@ -9,11 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useEffect } from "react";
 import { updateProducts, updateWishList } from "@/redux/Products/product";
-import {
-  updateWishlistGlobal,
-  updateWishlistsArray,
-} from "@/redux/Wishlist/wishlist";
-import { updateGlobalCart } from "@/redux/Cart/cart";
+import { updateWishlistsArray } from "@/redux/Wishlist/wishlist";
 
 export default function Products() {
   const router = useRouter();
@@ -43,28 +39,6 @@ export default function Products() {
 
     dispatch(updateProducts(products));
   }, [data]);
-
-  //? ================== UPDATE WISHLISTS ARRAY WITH ADDED ITEMS IN LOCALSTORAGE ==================
-
-  useEffect(() => {
-    const wishlistsItems = JSON.parse(
-      localStorage.getItem("wishlists") || "[]",
-    );
-
-    if (wishlistsItems.length) {
-      dispatch(updateWishlistGlobal(wishlistsItems));
-    }
-  }, []);
-
-  //? ================== UPDATE CART ARRAY WITH ADDED ITEMS IN LOCALSTORAGE ==================
-
-  useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-
-    if (cartItems.length) {
-      dispatch(updateGlobalCart(cartItems));
-    }
-  }, []);
 
   //? ================================== BUTTON NAVIGATION==================================
 

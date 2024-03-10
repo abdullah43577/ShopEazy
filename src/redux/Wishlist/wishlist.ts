@@ -1,3 +1,4 @@
+import { SwalAlert } from "@/components/utils/SwalAlert";
 import type { Products } from "@/components/utils/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
@@ -26,9 +27,17 @@ export const wishlistSlice = createSlice({
         // remove the item from the wishlist
         state.wishlists = state.wishlists.filter(
           (item) => item.id !== payload.id,
+          SwalAlert({
+            icon: "info",
+            title: "Item Succesfully Removed From Wishlist!",
+          }),
         );
       } else {
         state.wishlists.push(payload);
+        SwalAlert({
+          icon: "success",
+          title: "Item Succesfully Added To Wishlist!",
+        });
       }
       // save the wishlist to local storage
       localStorage.setItem("wishlists", JSON.stringify(state.wishlists));

@@ -5,6 +5,10 @@ import type { Products } from "@/components/utils/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Rating from "@/components/utils/Rating";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
+import { updateWishlistsArray } from "@/redux/Wishlist/wishlist";
+import { handleAddorDeleteCartItems } from "@/redux/Cart/cart";
 
 interface Props {
   params: { productsId: { 0: string; 1: string; 2: string }[] };
@@ -15,9 +19,33 @@ export default function ProductDetails({ params }: Props) {
     endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products/${params.productsId[1]}`,
     key: `product_${params.productsId[1]}`,
   });
+  const [btnTxt, setBtnTxt] = useState("");
+  const { wishlists } = useAppSelector((state) => state.wishlist);
+  const dispatch = useAppDispatch();
 
   const product: Products = data || {};
   const MotionImage = motion(Image);
+
+  useEffect(() => {
+    const isInWishlist = wishlists.find((obj) => obj.id === product.id);
+
+    if (isInWishlist) {
+      setBtnTxt("Remove from Wishlist");
+    } else {
+      setBtnTxt("Add to Wishlist");
+    }
+  }, [wishlists, product.id, btnTxt]);
+
+  const handleUpdateWishlist = function (product: Products) {
+    const newProduct = {
+      ...product,
+      isAddedToWishlist: false,
+      isAddedToCart: false,
+      quantity: 1,
+    };
+
+    dispatch(updateWishlistsArray(newProduct));
+  };
 
   return (
     <section>
@@ -49,11 +77,17 @@ export default function ProductDetails({ params }: Props) {
             <p>{product.rating?.count} reviews</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white">
-              Add to Wishlist
+            <button
+              className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white"
+              onClick={() => handleUpdateWishlist(product)}
+            >
+              {btnTxt}
             </button>
 
-            <button className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg">
+            <button
+              className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg"
+              onClick={() => dispatch(handleAddorDeleteCartItems(product))}
+            >
               Add to Cart
             </button>
           </div>

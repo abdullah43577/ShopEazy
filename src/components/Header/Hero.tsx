@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const animationVariants = {
   hidden: {
@@ -36,9 +37,11 @@ export default function Hero() {
         and more, right at your fingertips.
       </p>
 
-      <button className="h-[40px] rounded-[8px] border-2 border-white bg-whiteElBg px-4 font-bold text-darkElBg">
-        Start Shopping
-      </button>
+      <Link href="#shop_section">
+        <button className="h-[40px] rounded-[8px] border-2 border-white bg-whiteElBg px-4 font-bold text-darkElBg">
+          Start Shopping
+        </button>
+      </Link>
 
       <div className="flex items-center gap-2 text-white">
         <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border border-[#4b4b4b] font-bold">

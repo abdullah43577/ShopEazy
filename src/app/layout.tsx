@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ReduxProvider from "@/redux/ReduxProvider/ReduxProvider";
 import { Analytics } from "@vercel/analytics/react";
+import ReduxProvider from "@/redux/ReduxProvider/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "ShopEazy",

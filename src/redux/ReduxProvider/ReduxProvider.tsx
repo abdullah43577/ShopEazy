@@ -10,11 +10,11 @@ import { store } from "../store";
 
 const paths = ["/register", "/login"];
 
-export default function ReduxProvider({
-  children,
-}: {
+interface Children {
   children: React.ReactNode;
-}) {
+}
+
+export default function ReduxProvider({ children }: Children) {
   const queryClient = new QueryClient();
   const pathname = usePathname();
 

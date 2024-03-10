@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { Products } from "@/components/utils/types";
+import { SwalAlert } from "@/components/utils/SwalAlert";
 
 interface InitialState {
   cartItems: Products[];
@@ -26,8 +27,16 @@ export const cartSlice = createSlice({
         state.cartItems = state.cartItems.filter(
           (item) => item.id !== payload.id,
         );
+        SwalAlert({
+          icon: "info",
+          title: "Product Deleted From Cart Successfully!",
+        });
       } else {
         state.cartItems.push(payload);
+        SwalAlert({
+          icon: "success",
+          title: "Product Added To Cart Successfully!",
+        });
       }
       // save the cart to local storage
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
