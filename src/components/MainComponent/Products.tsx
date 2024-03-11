@@ -1,44 +1,21 @@
 "use client";
 
-import useFetch from "@/hooks/useFetch";
 import Image from "next/image";
 import { truncateTxt } from "../utils/TruncateTxt";
 import { motion } from "framer-motion";
 import type { Products } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useEffect } from "react";
-import { updateProducts, updateWishList } from "@/redux/Products/product";
-import { updateWishlistsArray } from "@/redux/Wishlist/wishlist";
+import { MouseEvent } from "react";
+import { wishlistAction } from "@/redux/Products/product";
 
 export default function Products() {
   const router = useRouter();
-  const { data } = useFetch({
-    endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
-    key: "products",
-  });
 
   const MotionImage = motion(Image);
 
   const { products } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
-
-  //? console.log("products", products);
-
-  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
-
-  useEffect(() => {
-    const products: Products[] = data?.length
-      ? data.map((product: Products) => ({
-          ...product,
-          isAddedToWishlist: false,
-          isAddedToCart: false,
-          quantity: 1,
-        }))
-      : [];
-
-    dispatch(updateProducts(products));
-  }, [data]);
 
   //? ================================== BUTTON NAVIGATION==================================
 
@@ -46,11 +23,9 @@ export default function Products() {
     router.push(url);
   };
 
-  const handleAddToWishList = (e: MouseEvent, product: Products) => {
+  const handleAddToWishList = (e: MouseEvent, productId: number) => {
     e.stopPropagation(); //? prevent event from bubbling to parent
-
-    dispatch(updateWishList(product));
-    dispatch(updateWishlistsArray(product));
+    dispatch(wishlistAction(productId));
   };
 
   return (
@@ -88,7 +63,7 @@ export default function Products() {
 
                 <div
                   className="absolute right-5 top-5 flex size-[40px] items-center justify-center rounded-[6px] bg-gray-400"
-                  onClick={(e) => handleAddToWishList(e, product)}
+                  onClick={(e) => handleAddToWishList(e, product.id)}
                 >
                   <motion.svg
                     initial={{ scale: 1 }}

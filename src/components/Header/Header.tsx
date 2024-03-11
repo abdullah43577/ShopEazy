@@ -6,16 +6,50 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ModalWindow from "../Modal/Modal";
 import { toggleModal } from "@/redux/Modal/modalWindow";
-import { updateGlobalCart } from "@/redux/Cart/cart";
-import { updateWishlistGlobal } from "@/redux/Wishlist/wishlist";
+import useFetch from "@/hooks/useFetch";
+import type { Products } from "../utils/types";
+import {
+  updateCart,
+  updateProducts,
+  updateWishlist,
+} from "@/redux/Products/product";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { wishlists } = useAppSelector((state) => state.wishlist);
+  const { products, wishlists, cartItems } = useAppSelector(
+    (state) => state.products,
+  );
+
   const dispatch = useAppDispatch();
   const [modalType, setModalType] = useState<
     "wishlist" | "cart" | "notification" | null
   >(null);
+
+  const { data } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
+    key: "products",
+  });
+
+  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
+
+  useEffect(() => {
+    const localStorageData = JSON.parse(
+      localStorage.getItem("products") || "[]",
+    );
+
+    const products: Products[] = localStorageData.length
+      ? localStorageData
+      : data?.length
+        ? data.map((product: Products) => ({
+            ...product,
+            isAddedToWishlist: false,
+            isAddedToCart: false,
+            quantity: 1,
+          }))
+        : [];
+
+    dispatch(updateProducts(products));
+  }, [data]);
 
   //? ============ UPDATE WISHLISTS ARRAY WITH ADDED ITEMS IN LOCALSTORAGE ==============
 
@@ -25,7 +59,7 @@ export default function Header() {
     );
 
     if (wishlistsItems.length) {
-      dispatch(updateWishlistGlobal(wishlistsItems));
+      dispatch(updateWishlist(wishlistsItems));
     }
   }, []);
 
@@ -35,7 +69,7 @@ export default function Header() {
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
 
     if (cartItems.length) {
-      dispatch(updateGlobalCart(cartItems));
+      dispatch(updateCart(cartItems));
     }
   }, []);
 
@@ -173,7 +207,7 @@ export default function Header() {
                   </svg>
 
                   <div className="absolute -right-[1px] top-1 flex size-5 items-center justify-center rounded-full bg-bookmark text-[10px] text-white">
-                    1
+                    {cartItems.length}
                   </div>
                 </div>
               </div>

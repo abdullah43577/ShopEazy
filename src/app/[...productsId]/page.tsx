@@ -1,51 +1,72 @@
 "use client";
 
-import useFetch from "@/hooks/useFetch";
 import type { Products } from "@/components/utils/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Rating from "@/components/utils/Rating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
-import { updateWishlistsArray } from "@/redux/Wishlist/wishlist";
 import { handleAddorDeleteCartItems } from "@/redux/Cart/cart";
 
 interface Props {
-  params: { productsId: { 0: string; 1: string; 2: string }[] };
+  params: { productsId: [string, string, string] };
 }
 
 export default function ProductDetails({ params }: Props) {
-  const { data } = useFetch({
-    endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products/${params.productsId[1]}`,
-    key: `product_${params.productsId[1]}`,
+  const [product, setProduct] = useState<Products>({
+    category: "",
+    description: "",
+    id: 0,
+    image: "",
+    price: 0,
+    rating: { rate: 0, count: 0 },
+    title: "",
+    isAddedToWishlist: false,
+    isAddedToCart: false,
+    quantity: 1,
   });
-  const [btnTxt, setBtnTxt] = useState("");
-  const { wishlists } = useAppSelector((state) => state.wishlist);
+  const { products } = useAppSelector((state) => state.products);
+  const { cartItems } = useAppSelector((state) => state.cartItems);
+  const [wishlistBtn, setWishlistBtn] = useState("");
+  const [cartBtn, setCartBtn] = useState("");
   const dispatch = useAppDispatch();
 
-  const product: Products = data || {};
   const MotionImage = motion(Image);
 
   useEffect(() => {
-    const isInWishlist = wishlists.find((obj) => obj.id === product.id);
+    const id = Number(params.productsId[1]);
+    const currentProduct = products.find((product) => product.id === id);
 
-    if (isInWishlist) {
-      setBtnTxt("Remove from Wishlist");
-    } else {
-      setBtnTxt("Add to Wishlist");
+    if (currentProduct) {
+      setProduct(currentProduct);
     }
-  }, [wishlists, product.id, btnTxt]);
+  }, [params.productsId, products]);
 
-  const handleUpdateWishlist = function (product: Products) {
-    const newProduct = {
-      ...product,
-      isAddedToWishlist: false,
-      isAddedToCart: false,
-      quantity: 1,
-    };
+  //? ================== UPDATE BTN FOR ADDING ITEMS TO WISHLISTS ==================
 
-    dispatch(updateWishlistsArray(newProduct));
-  };
+  // useEffect(() => {
+  //   const id = Number(params.productsId[1]);
+  //   const currentProduct = wishlists.find((product) => product.id === id);
+
+  //   if (currentProduct) {
+  //     setWishlistBtn("Remove from wishlists");
+  //   } else {
+  //     setWishlistBtn("Add to wishlists");
+  //   }
+  // }, [params.productsId]);
+
+  //? ================== UPDATE BTN FOR ADDING ITEMS TO CART =========================
+
+  useEffect(() => {
+    const id = Number(params.productsId[1]);
+    const currentProduct = cartItems.find((product) => product.id === id);
+
+    if (currentProduct) {
+      setCartBtn("Remove from cart");
+    } else {
+      setCartBtn("Add to cart");
+    }
+  }, [cartItems, params.productsId]);
 
   return (
     <section>
@@ -77,18 +98,15 @@ export default function ProductDetails({ params }: Props) {
             <p>{product.rating?.count} reviews</p>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white"
-              onClick={() => handleUpdateWishlist(product)}
-            >
-              {btnTxt}
+            <button className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white">
+              {wishlistBtn}
             </button>
 
             <button
               className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg"
               onClick={() => dispatch(handleAddorDeleteCartItems(product))}
             >
-              Add to Cart
+              {cartBtn}
             </button>
           </div>
         </div>

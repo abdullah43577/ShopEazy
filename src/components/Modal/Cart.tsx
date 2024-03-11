@@ -1,12 +1,37 @@
 "use client";
 
-import { useAppSelector } from "@/redux/hooks";
+import {
+  handleDecrementQuantity,
+  handleIncrementQuantity,
+} from "@/redux/Cart/cart";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Products } from "../utils/types";
 
 export default function Cart() {
   const MotionImage = motion(Image);
-  const { cartItems } = useAppSelector((state) => state.cartItems);
+  const [cartData, setCartData] = useState<Products[]>([]);
+  const { products, cartItems } = useAppSelector((state) => state.products);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    let arr: Products[] = [];
+
+    cartItems.forEach((item) => {
+      const product = products.find((product) => product.id === item.productId);
+
+      if (product) {
+        arr.push({
+          ...product,
+          quantity: item.quantity,
+        });
+      }
+    });
+
+    setCartData(arr);
+  }, [cartItems, products]);
 
   return (
     <>
@@ -15,7 +40,7 @@ export default function Cart() {
       </h2>
 
       <div className="mt-8 flex max-h-[80%] flex-col gap-3 overflow-y-scroll">
-        {cartItems.map((product) => (
+        {cartData.map((product) => (
           <div key={product.id} className="rounded-[12px] bg-black p-4">
             <div className="flex items-start gap-8">
               <div className="flex size-[150px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
@@ -40,7 +65,10 @@ export default function Cart() {
 
                 <div className="flex items-center gap-4">
                   {/* chevron left */}
-                  <div className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]">
+                  <div
+                    className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]"
+                    onClick={() => handleDecrementQuantity(product)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -56,10 +84,13 @@ export default function Cart() {
                     </svg>
                   </div>
 
-                  <p className="text-white">1</p>
+                  <p className="text-white">{product.quantity}</p>
 
                   {/* chevron right */}
-                  <div className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]">
+                  <div
+                    className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]"
+                    onClick={() => dispatch(handleIncrementQuantity(product))}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -83,7 +114,7 @@ export default function Cart() {
                   </button>
 
                   <button className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black">
-                    Add to cart
+                    Remove from cart
                   </button>
                 </div>
               </div>

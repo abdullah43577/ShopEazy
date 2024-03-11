@@ -2,13 +2,25 @@ import { SwalAlert } from "@/components/utils/SwalAlert";
 import type { Products } from "@/components/utils/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+type InitialType = { productId: number; quantity: number }[];
+
 interface InitialState {
   products: Products[];
+  wishlists: InitialType;
+  cartItems: InitialType;
 }
 
 const initialState: InitialState = {
   products: [],
+  wishlists: [],
+  cartItems: [],
 };
+
+interface QuantityChange {
+  productId: number;
+  stateType: "wishlists" | "cartItems";
+  type: "increment" | "decrement";
+}
 
 export const productsSlice = createSlice({
   name: "products",
@@ -16,60 +28,114 @@ export const productsSlice = createSlice({
   reducers: {
     updateProducts: (state, action: PayloadAction<Products[]>) => {
       const { payload } = action;
-      //? loop through payload and check if there's any update in the products array in relation to localStorage and update the specific property in the state
+      state.products = payload;
+      localStorage.setItem("products", JSON.stringify(state.products));
+    },
 
-      const wishListItems = JSON.parse(
-        localStorage.getItem("wishlists") || "[]",
+    // ? WISHLIST CODE IMPLEMENTATION
+
+    updateWishlist: (state, action: PayloadAction<InitialType>) => {
+      const { payload } = action;
+      state.wishlists = payload;
+    },
+
+    wishlistAction: (state, action: PayloadAction<number>) => {
+      // ? PAYLOAD = PRODUCT ID
+      const { payload } = action;
+
+      const itemIndex = state.wishlists.findIndex(
+        (obj) => obj.productId === payload,
+      );
+      const productIndex = state.products.findIndex(
+        (obj) => obj.id === payload,
       );
 
-      payload.forEach((product) => {
-        if (wishListItems.length) {
-          wishListItems.forEach((item: any) => {
-            if (product.id === item.id) {
-              product.isAddedToWishlist = true;
-            }
-          });
-        }
-      });
+      if (itemIndex !== -1) {
+        state.wishlists.splice(itemIndex, 1);
+        state.products[productIndex].isAddedToWishlist = false;
+        SwalAlert({
+          icon: "info",
+          title: "Item Removed from Wishlist",
+        });
+      } else {
+        state.wishlists.push({ productId: payload, quantity: 1 });
+        state.products[productIndex].isAddedToWishlist = true;
+        SwalAlert({
+          icon: "success",
+          title: "Item Added to Wishlist",
+        });
+      }
 
-      state.products = payload;
+      // ? UPDATE LOCAL STORAGE
+      localStorage.setItem("wishlists", JSON.stringify(state.wishlists));
+      localStorage.setItem("products", JSON.stringify(state.products));
     },
 
-    updateWishList: (state, action: PayloadAction<Record<string, any>>) => {
-      const { payload } = action;
+    quantityChange: (state, action: PayloadAction<QuantityChange>) => {
+      // ? PRODUCTID = PRODUCT ID, STATEtYPE = WISHLISTS OR CARTITEMS, TYPE = 'INCREMENT' | 'DECREMENT'
+      const { productId, stateType, type } = action.payload;
 
-      state.products.forEach((product) => {
-        if (product.id === payload.id) {
-          // toggle the state of the wishlist for the current item
-          product.isAddedToWishlist = !product.isAddedToWishlist;
+      state[stateType].forEach((product) => {
+        if (product.productId === productId) {
+          if (type === "increment") {
+            product.quantity += 1;
+          } else if (product.quantity > 1) {
+            product.quantity -= 1;
+          }
 
-          SwalAlert({
-            icon: `${product.isAddedToWishlist ? "success" : "info"}`,
-            title: `${
-              product.isAddedToWishlist
-                ? "Item Added to Wishlist"
-                : "Item Removed from Wishlist"
-            }`,
-          });
+          return;
         }
       });
     },
 
-    updateCartItems: (state, action: PayloadAction<Record<string, any>>) => {
+    // ? CART ITEMS CODE IMPLEMENTATION
+
+    updateCart: (state, action: PayloadAction<InitialType>) => {
       const { payload } = action;
-      // get the current object that was clicked in the array
-      state.products.forEach((product) => {
-        if (product.id === payload.id) {
-          // toggle the state of the cart for the current item
-          product.isAddedToCart = !product.isAddedToCart;
-        }
-      });
+      state.cartItems = payload;
+    },
+
+    cartAction: (state, action: PayloadAction<number>) => {
+      const { payload } = action;
+
+      const itemIndex = state.cartItems.findIndex(
+        (obj) => obj.productId === payload,
+      );
+      const productIndex = state.products.findIndex(
+        (obj) => obj.id === payload,
+      );
+
+      if (itemIndex !== -1) {
+        state.cartItems.splice(itemIndex, 1);
+        state.products[productIndex].isAddedToCart = false;
+        SwalAlert({
+          icon: "info",
+          title: "Item Removed from Cart",
+        });
+      } else {
+        state.cartItems.push({ productId: payload, quantity: 1 });
+        state.products[productIndex].isAddedToCart = true;
+        SwalAlert({
+          icon: "success",
+          title: "Item Added to Cart",
+        });
+      }
+
+      // ? UPDATE LOCAL STORAGE
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("products", JSON.stringify(state.products));
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateProducts, updateWishList, updateCartItems } =
-  productsSlice.actions;
+export const {
+  updateProducts,
+  updateWishlist,
+  wishlistAction,
+  quantityChange,
+  updateCart,
+  cartAction,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;

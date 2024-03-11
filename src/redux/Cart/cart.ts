@@ -32,7 +32,8 @@ export const cartSlice = createSlice({
           title: "Product Deleted From Cart Successfully!",
         });
       } else {
-        state.cartItems.push(payload);
+        const modifiedPayload = { ...payload, isAddedToCart: true };
+        state.cartItems.push(modifiedPayload);
         SwalAlert({
           icon: "success",
           title: "Product Added To Cart Successfully!",
@@ -41,11 +42,35 @@ export const cartSlice = createSlice({
       // save the cart to local storage
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
+
+    handleIncrementQuantity: (state, action: PayloadAction<Products>) => {
+      const { payload } = action;
+      state.cartItems.forEach((product) => {
+        if (product.id === payload.id) {
+          product.quantity += 1;
+        }
+      });
+    },
+
+    handleDecrementQuantity: (state, action: PayloadAction<Products>) => {
+      const { payload } = action;
+      state.cartItems.forEach((product) => {
+        if (product.id === payload.id) {
+          if (product.quantity > 1) {
+            product.quantity -= 1;
+          }
+        }
+      });
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateGlobalCart, handleAddorDeleteCartItems } =
-  cartSlice.actions;
+export const {
+  updateGlobalCart,
+  handleAddorDeleteCartItems,
+  handleIncrementQuantity,
+  handleDecrementQuantity,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
