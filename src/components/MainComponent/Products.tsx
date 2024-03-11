@@ -7,7 +7,7 @@ import type { Products } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
-import { wishlistAction } from "@/redux/Products/product";
+import { dispatchAction } from "@/redux/Products/product";
 
 export default function Products() {
   const router = useRouter();
@@ -25,76 +25,79 @@ export default function Products() {
 
   const handleAddToWishList = (e: MouseEvent, productId: number) => {
     e.stopPropagation(); //? prevent event from bubbling to parent
-    dispatch(wishlistAction(productId));
+
+    dispatch(
+      dispatchAction({
+        productId: productId,
+        stateType: "wishlists",
+        productType: "isAddedToWishlist",
+      }),
+    );
   };
 
   return (
-    <section className="w-[70%] text-white">
-      <p className="text-right">Sort By</p>
-
-      <div className="grid_layout mt-6">
-        {products.map((product) => {
-          return (
-            <div
-              onClick={() =>
-                handlePageNavigate(
-                  `/product/${encodeURIComponent(product.id)}/${encodeURIComponent(product.title)}`,
-                )
-              }
-              key={product.id}
-              className="cursor-pointer space-y-1"
-            >
-              <div className="relative">
-                <div className="flex max-h-[350px] min-h-[350px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
-                  {product.image && (
-                    <MotionImage
-                      initial={{ scale: 0.7 }}
-                      whileHover={{ scale: 0.9 }}
-                      transition={{ duration: 0.5 }}
-                      src={product.image}
-                      alt={product.title}
-                      priority
-                      width={300}
-                      height={200}
-                      className="object-contain"
-                    />
-                  )}
-                </div>
-
-                <div
-                  className="absolute right-5 top-5 flex size-[40px] items-center justify-center rounded-[6px] bg-gray-400"
-                  onClick={(e) => handleAddToWishList(e, product.id)}
-                >
-                  <motion.svg
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    fill="currentColor"
-                    className={`bi bi-heart-fill ${product.isAddedToWishlist ? "text-bookmark" : ""}`}
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                    />
-                  </motion.svg>
-                </div>
+    <section className="grid_layout mt-6 w-[70%] text-white">
+      {products.map((product) => {
+        return (
+          <div
+            onClick={() =>
+              handlePageNavigate(
+                `/product/${encodeURIComponent(product.id)}/${encodeURIComponent(product.title)}`,
+              )
+            }
+            key={product.id}
+            className="cursor-pointer space-y-1"
+          >
+            <div className="relative">
+              <div className="flex max-h-[350px] min-h-[350px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
+                {product.image && (
+                  <MotionImage
+                    initial={{ scale: 0.7 }}
+                    whileHover={{ scale: 0.9 }}
+                    transition={{ duration: 0.5 }}
+                    src={product.image}
+                    alt={product.title}
+                    priority
+                    width={300}
+                    height={200}
+                    className="object-contain"
+                  />
+                )}
               </div>
 
-              <p className="font-bold text-bookmark">New Clothing</p>
-              <h2 className="font-semidbold text-xl">
-                {truncateTxt({ txt: product.title, n: 30 })}
-              </h2>
-              <p>{truncateTxt({ txt: product.description, n: 50 })}</p>
-
-              <p className="pt-3 text-xl">$ {product.price}</p>
+              <div
+                className="absolute right-5 top-5 flex size-[40px] items-center justify-center rounded-[6px] bg-gray-400"
+                onClick={(e) => handleAddToWishList(e, product.id)}
+              >
+                <motion.svg
+                  initial={{ scale: 1 }}
+                  whileHover={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  className={`bi bi-heart-fill ${product.isAddedToWishlist ? "text-bookmark" : ""}`}
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                  />
+                </motion.svg>
+              </div>
             </div>
-          );
-        })}
-      </div>
+
+            <p className="font-bold text-bookmark">New Clothing</p>
+            <h2 className="font-semidbold text-xl">
+              {truncateTxt({ txt: product.title, n: 30 })}
+            </h2>
+            <p>{truncateTxt({ txt: product.description, n: 50 })}</p>
+
+            <p className="pt-3 text-xl">$ {product.price}</p>
+          </div>
+        );
+      })}
     </section>
   );
 }

@@ -51,31 +51,21 @@ export default function Header() {
     dispatch(updateProducts(products));
   }, [data]);
 
-  //? ============ UPDATE WISHLISTS ARRAY WITH ADDED ITEMS IN LOCALSTORAGE ==============
-
   useEffect(() => {
+    //? ============ INITIALIZE WISHLISTS ITEMS FROM LOCALSTORAGE ==============
     const wishlistsItems = JSON.parse(
       localStorage.getItem("wishlists") || "[]",
     );
 
-    if (wishlistsItems.length) {
-      dispatch(updateWishlist(wishlistsItems));
-    }
-  }, []);
+    if (wishlistsItems.length) dispatch(updateWishlist(wishlistsItems));
 
-  //? =============== UPDATE CART ARRAY WITH ADDED ITEMS IN LOCALSTORAGE ==================
+    //? ============ INITIALIZE CART ITEMS FROM LOCALSTORAGE ==============
 
-  useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    if (cartItems.length) dispatch(updateCart(cartItems));
 
-    if (cartItems.length) {
-      dispatch(updateCart(cartItems));
-    }
-  }, []);
+    //? =============== HANDLE PAGE SCROLL SETTING THE NAVBAR TO FIXED ==================
 
-  //? =============== HANDLE PAGE SCROLL SETTING THE NAVBAR TO FIXED ==================
-
-  useEffect(() => {
     const handleScroll = function () {
       if (window.scrollY > 0) {
         setIsScrolled(true);

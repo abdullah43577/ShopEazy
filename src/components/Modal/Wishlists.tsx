@@ -5,11 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Products } from "../utils/types";
 import { useEffect, useState } from "react";
-import {
-  cartAction,
-  quantityChange,
-  wishlistAction,
-} from "@/redux/Products/product";
+import { dispatchAction, quantityChange } from "@/redux/Products/product";
 
 export default function Wishlists() {
   const MotionImage = motion(Image);
@@ -132,14 +128,30 @@ export default function Wishlists() {
                 <div className="mt-4 flex items-center gap-4">
                   <button
                     className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-transparent px-4 text-sm font-bold text-white"
-                    onClick={() => dispatch(wishlistAction(product.id))}
+                    onClick={() =>
+                      dispatch(
+                        dispatchAction({
+                          productId: product.id,
+                          stateType: "wishlists",
+                          productType: "isAddedToWishlist",
+                        }),
+                      )
+                    }
                   >
                     Remove item
                   </button>
 
                   <button
                     className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
-                    onClick={() => dispatch(cartAction(product.id))}
+                    onClick={() =>
+                      dispatch(
+                        dispatchAction({
+                          productId: product.id,
+                          stateType: "cartItems",
+                          productType: "isAddedToCart",
+                        }),
+                      )
+                    }
                   >
                     {cartItems.some((item) => item.productId === product.id)
                       ? "Remove from cart"

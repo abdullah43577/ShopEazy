@@ -22,6 +22,19 @@ interface QuantityChange {
   type: "increment" | "decrement";
 }
 
+interface DispatchAction {
+  productId: number;
+  stateType: "wishlists" | "cartItems";
+  productType: "isAddedToWishlist" | "isAddedToCart";
+}
+
+type Filter =
+  | "all"
+  | "men's clothing"
+  | "women's clothing"
+  | "electronics"
+  | "jewelery";
+
 export const productsSlice = createSlice({
   name: "products",
   initialState,
@@ -37,38 +50,6 @@ export const productsSlice = createSlice({
     updateWishlist: (state, action: PayloadAction<InitialType>) => {
       const { payload } = action;
       state.wishlists = payload;
-    },
-
-    wishlistAction: (state, action: PayloadAction<number>) => {
-      // ? PAYLOAD = PRODUCT ID
-      const { payload } = action;
-
-      const itemIndex = state.wishlists.findIndex(
-        (obj) => obj.productId === payload,
-      );
-      const productIndex = state.products.findIndex(
-        (obj) => obj.id === payload,
-      );
-
-      if (itemIndex !== -1) {
-        state.wishlists.splice(itemIndex, 1);
-        state.products[productIndex].isAddedToWishlist = false;
-        SwalAlert({
-          icon: "info",
-          title: "Item Removed from Wishlist",
-        });
-      } else {
-        state.wishlists.push({ productId: payload, quantity: 1 });
-        state.products[productIndex].isAddedToWishlist = true;
-        SwalAlert({
-          icon: "success",
-          title: "Item Added to Wishlist",
-        });
-      }
-
-      // ? UPDATE LOCAL STORAGE
-      localStorage.setItem("wishlists", JSON.stringify(state.wishlists));
-      localStorage.setItem("products", JSON.stringify(state.products));
     },
 
     quantityChange: (state, action: PayloadAction<QuantityChange>) => {
@@ -95,35 +76,54 @@ export const productsSlice = createSlice({
       state.cartItems = payload;
     },
 
-    cartAction: (state, action: PayloadAction<number>) => {
-      const { payload } = action;
+    // ? UPDATING THE WISHLIST AND CART ITEMS
 
-      const itemIndex = state.cartItems.findIndex(
-        (obj) => obj.productId === payload,
+    dispatchAction: (state, action: PayloadAction<DispatchAction>) => {
+      const { productId, stateType, productType } = action.payload;
+
+      const itemIndex = state[stateType].findIndex(
+        (obj) => obj.productId === productId,
       );
       const productIndex = state.products.findIndex(
-        (obj) => obj.id === payload,
+        (obj) => obj.id === productId,
       );
 
+      const swalName = stateType === "wishlists" ? "Wishlist" : "Cart";
+
       if (itemIndex !== -1) {
-        state.cartItems.splice(itemIndex, 1);
-        state.products[productIndex].isAddedToCart = false;
+        state[stateType].splice(itemIndex, 1);
+        state.products[productIndex][productType] = false;
         SwalAlert({
           icon: "info",
-          title: "Item Removed from Cart",
+          title: `Item Removed from ${swalName}`,
         });
       } else {
-        state.cartItems.push({ productId: payload, quantity: 1 });
-        state.products[productIndex].isAddedToCart = true;
+        state[stateType].push({ productId: productId, quantity: 1 });
+        state.products[productIndex][productType] = true;
         SwalAlert({
           icon: "success",
-          title: "Item Added to Cart",
+          title: `Item Added to ${swalName}`,
         });
       }
 
       // ? UPDATE LOCAL STORAGE
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem(stateType, JSON.stringify(state[stateType]));
       localStorage.setItem("products", JSON.stringify(state.products));
+    },
+
+    dispatchFilter: (state, action: PayloadAction<Filter>) => {
+      const { payload } = action;
+
+      if (payload === "all") {
+        const localStorageData = JSON.parse(
+          localStorage.getItem("products") || "[]",
+        );
+        state.products = localStorageData.length ? localStorageData : [];
+      } else {
+        state.products = state.products.filter(
+          (product) => product.category === payload,
+        );
+      }
     },
   },
 });
@@ -132,10 +132,10 @@ export const productsSlice = createSlice({
 export const {
   updateProducts,
   updateWishlist,
-  wishlistAction,
   quantityChange,
   updateCart,
-  cartAction,
+  dispatchAction,
+  dispatchFilter,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

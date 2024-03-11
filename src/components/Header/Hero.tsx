@@ -1,3 +1,7 @@
+"use client";
+
+import { dispatchFilter } from "@/redux/Products/product";
+import { useAppDispatch } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -18,6 +22,8 @@ const animationVariants = {
 };
 
 export default function Hero() {
+  const dispatch = useAppDispatch();
+
   return (
     <motion.section
       variants={animationVariants}
@@ -44,23 +50,38 @@ export default function Hero() {
       </Link>
 
       <div className="flex items-center gap-2 text-white">
-        <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border border-[#4b4b4b] font-bold">
+        <p
+          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border border-[#4b4b4b] font-bold"
+          onClick={() => dispatch(dispatchFilter("all"))}
+        >
           All
         </p>
 
-        <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border">
+        <p
+          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
+          onClick={() => dispatch(dispatchFilter("men's clothing"))}
+        >
           Men's
         </p>
 
-        <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border">
+        <p
+          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
+          onClick={() => dispatch(dispatchFilter("women's clothing"))}
+        >
           Women's
         </p>
 
-        <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border">
+        <p
+          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
+          onClick={() => dispatch(dispatchFilter("electronics"))}
+        >
           Electronics
         </p>
 
-        <p className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border">
+        <p
+          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
+          onClick={() => dispatch(dispatchFilter("jewelery"))}
+        >
           Jewelery
         </p>
       </div>

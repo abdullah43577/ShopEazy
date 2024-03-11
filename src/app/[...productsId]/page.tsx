@@ -6,7 +6,7 @@ import Image from "next/image";
 import Rating from "@/components/utils/Rating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
-import { cartAction } from "@/redux/Products/product";
+import { dispatchAction } from "@/redux/Products/product";
 
 interface Props {
   params: { productsId: [string, string, string] };
@@ -77,7 +77,15 @@ export default function ProductDetails({ params }: Props) {
 
             <button
               className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg"
-              onClick={() => dispatch(cartAction(product.id))}
+              onClick={() =>
+                dispatch(
+                  dispatchAction({
+                    productId: product.id,
+                    stateType: "cartItems",
+                    productType: "isAddedToCart",
+                  }),
+                )
+              }
             >
               {product.isAddedToCart ? "Remove from cart" : "Add to cart"}
             </button>
