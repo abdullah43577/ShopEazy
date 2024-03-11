@@ -1,3 +1,4 @@
+import { SwalAlert } from "@/components/utils/SwalAlert";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface InitialState {
@@ -9,7 +10,7 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  All: false,
+  All: true,
   Men: false,
   Women: false,
   Electronics: false,
@@ -22,7 +23,19 @@ export const filterSlice = createSlice({
   reducers: {
     updateFilter: (state, action: PayloadAction<keyof InitialState>) => {
       const { payload } = action;
-      state[payload] = !state[payload];
+
+      for (const key in state) {
+        if (key === payload) {
+          state[key] = true;
+        } else {
+          state[key as keyof InitialState] = false;
+        }
+      }
+
+      SwalAlert({
+        icon: "success",
+        title: `Filter has been updated to ${payload}`,
+      });
     },
   },
 });

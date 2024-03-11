@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import RegisterSlice from "./Register/Register";
 import productsSlice from "./Products/product";
 import modalSlice from "./Modal/modalWindow";
+import filterSlice from "./Filters/filters";
 
 export const store = configureStore({
   reducer: {
     register: RegisterSlice,
     products: productsSlice,
     modalWindow: modalSlice,
+    filters: filterSlice,
   },
 });
 

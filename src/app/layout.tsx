@@ -15,6 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/icon.png" sizes="any" />
       <body className="bg-white dark:bg-black" suppressHydrationWarning={true}>
         <ReduxProvider>
           {children}

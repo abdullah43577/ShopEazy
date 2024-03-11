@@ -1,7 +1,8 @@
 "use client";
 
+import { updateFilter } from "@/redux/Filters/filters";
 import { dispatchFilter } from "@/redux/Products/product";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -21,8 +22,27 @@ const animationVariants = {
   },
 };
 
+interface Filter {
+  filter: "All" | "Men" | "Women" | "Electronics" | "Jewelery";
+
+  categoryName:
+    | "all"
+    | "men's clothing"
+    | "women's clothing"
+    | "electronics"
+    | "jewelery";
+}
+
 export default function Hero() {
+  const { All, Men, Women, Electronics, Jewelery } = useAppSelector(
+    (state) => state.filters,
+  );
   const dispatch = useAppDispatch();
+
+  const handleDispatchFilter = ({ filter, categoryName }: Filter) => {
+    dispatch(updateFilter(filter));
+    dispatch(dispatchFilter(categoryName));
+  };
 
   return (
     <motion.section
@@ -51,36 +71,58 @@ export default function Hero() {
 
       <div className="flex items-center gap-2 text-white">
         <p
-          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border border-[#4b4b4b] font-bold"
-          onClick={() => dispatch(dispatchFilter("all"))}
+          className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${All ? "border" : "hover:border"}`}
+          onClick={() =>
+            handleDispatchFilter({ filter: "All", categoryName: "all" })
+          }
         >
           All
         </p>
 
         <p
-          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
-          onClick={() => dispatch(dispatchFilter("men's clothing"))}
+          className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${Men ? "border" : "hover:border"}`}
+          onClick={() =>
+            handleDispatchFilter({
+              filter: "Men",
+              categoryName: "men's clothing",
+            })
+          }
         >
           Men's
         </p>
 
         <p
-          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
-          onClick={() => dispatch(dispatchFilter("women's clothing"))}
+          className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${Women ? "border" : "hover:border"}`}
+          onClick={() =>
+            handleDispatchFilter({
+              filter: "Women",
+              categoryName: "women's clothing",
+            })
+          }
         >
           Women's
         </p>
 
         <p
-          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
-          onClick={() => dispatch(dispatchFilter("electronics"))}
+          className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${Electronics ? "border" : "hover:border"}`}
+          onClick={() =>
+            handleDispatchFilter({
+              filter: "Electronics",
+              categoryName: "electronics",
+            })
+          }
         >
           Electronics
         </p>
 
         <p
-          className="flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold hover:border"
-          onClick={() => dispatch(dispatchFilter("jewelery"))}
+          className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${Jewelery ? "border" : "hover:border"}`}
+          onClick={() =>
+            handleDispatchFilter({
+              filter: "Jewelery",
+              categoryName: "jewelery",
+            })
+          }
         >
           Jewelery
         </p>

@@ -114,13 +114,14 @@ export const productsSlice = createSlice({
     dispatchFilter: (state, action: PayloadAction<Filter>) => {
       const { payload } = action;
 
+      const localStorageData: Products[] = JSON.parse(
+        localStorage.getItem("products") || "[]",
+      );
+
       if (payload === "all") {
-        const localStorageData = JSON.parse(
-          localStorage.getItem("products") || "[]",
-        );
         state.products = localStorageData.length ? localStorageData : [];
       } else {
-        state.products = state.products.filter(
+        state.products = localStorageData.filter(
           (product) => product.category === payload,
         );
       }
