@@ -1,14 +1,11 @@
 "use client";
 
-import {
-  handleDecrementQuantity,
-  handleIncrementQuantity,
-} from "@/redux/Cart/cart";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Products } from "../utils/types";
+import { cartAction, quantityChange } from "@/redux/Products/product";
 
 export default function Cart() {
   const MotionImage = motion(Image);
@@ -60,14 +57,25 @@ export default function Cart() {
               <div>
                 <div>
                   <p className="text-white">{product.title}</p>
-                  <p className="mb-4 mt-1 text-bookmark">${product.price}</p>
+                  <p className="mb-4 mt-1 text-bookmark">
+                    ${product.price} * {product.quantity} = $
+                    {(product.price * product.quantity).toFixed()}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-4">
                   {/* chevron left */}
                   <div
                     className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]"
-                    onClick={() => handleDecrementQuantity(product)}
+                    onClick={() =>
+                      dispatch(
+                        quantityChange({
+                          productId: product.id,
+                          stateType: "cartItems",
+                          type: "decrement",
+                        }),
+                      )
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +97,15 @@ export default function Cart() {
                   {/* chevron right */}
                   <div
                     className="flex size-8 cursor-pointer items-center justify-center rounded-[8px] border-2 border-[#4b4b4b] hover:bg-[#4b4b4b]"
-                    onClick={() => dispatch(handleIncrementQuantity(product))}
+                    onClick={() =>
+                      dispatch(
+                        quantityChange({
+                          productId: product.id,
+                          stateType: "cartItems",
+                          type: "increment",
+                        }),
+                      )
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -108,15 +124,13 @@ export default function Cart() {
                 </div>
 
                 {/* Add to cart */}
-                <div className="mt-4 flex items-center gap-4">
-                  <button className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-transparent px-4 text-sm font-bold text-white">
-                    Remove item
-                  </button>
 
-                  <button className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black">
-                    Remove from cart
-                  </button>
-                </div>
+                <button
+                  className="mt-4 h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
+                  onClick={() => dispatch(cartAction(product.id))}
+                >
+                  Remove from cart
+                </button>
               </div>
             </div>
           </div>

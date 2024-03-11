@@ -6,7 +6,7 @@ import Image from "next/image";
 import Rating from "@/components/utils/Rating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
-import { handleAddorDeleteCartItems } from "@/redux/Cart/cart";
+import { cartAction } from "@/redux/Products/product";
 
 interface Props {
   params: { productsId: [string, string, string] };
@@ -25,10 +25,7 @@ export default function ProductDetails({ params }: Props) {
     isAddedToCart: false,
     quantity: 1,
   });
-  const { products } = useAppSelector((state) => state.products);
-  const { cartItems } = useAppSelector((state) => state.cartItems);
-  const [wishlistBtn, setWishlistBtn] = useState("");
-  const [cartBtn, setCartBtn] = useState("");
+  const { products, cartItems } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
 
   const MotionImage = motion(Image);
@@ -41,32 +38,6 @@ export default function ProductDetails({ params }: Props) {
       setProduct(currentProduct);
     }
   }, [params.productsId, products]);
-
-  //? ================== UPDATE BTN FOR ADDING ITEMS TO WISHLISTS ==================
-
-  // useEffect(() => {
-  //   const id = Number(params.productsId[1]);
-  //   const currentProduct = wishlists.find((product) => product.id === id);
-
-  //   if (currentProduct) {
-  //     setWishlistBtn("Remove from wishlists");
-  //   } else {
-  //     setWishlistBtn("Add to wishlists");
-  //   }
-  // }, [params.productsId]);
-
-  //? ================== UPDATE BTN FOR ADDING ITEMS TO CART =========================
-
-  useEffect(() => {
-    const id = Number(params.productsId[1]);
-    const currentProduct = cartItems.find((product) => product.id === id);
-
-    if (currentProduct) {
-      setCartBtn("Remove from cart");
-    } else {
-      setCartBtn("Add to cart");
-    }
-  }, [cartItems, params.productsId]);
 
   return (
     <section>
@@ -99,14 +70,16 @@ export default function ProductDetails({ params }: Props) {
           </div>
           <div className="flex items-center gap-3">
             <button className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white">
-              {wishlistBtn}
+              {product.isAddedToWishlist
+                ? "Remove from wishlist"
+                : "Add to wishlist"}
             </button>
 
             <button
               className="h-[40px] w-[200px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg"
-              onClick={() => dispatch(handleAddorDeleteCartItems(product))}
+              onClick={() => dispatch(cartAction(product.id))}
             >
-              {cartBtn}
+              {product.isAddedToCart ? "Remove from cart" : "Add to cart"}
             </button>
           </div>
         </div>
