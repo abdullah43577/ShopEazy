@@ -127,7 +127,7 @@ export default function Wishlists() {
                 {/* Add to cart */}
                 <div className="mt-4 flex items-center gap-4">
                   <button
-                    className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-transparent px-4 text-sm font-bold text-white"
+                    className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-transparent px-4 text-sm font-bold text-white"
                     onClick={() =>
                       dispatch(
                         dispatchAction({
@@ -142,7 +142,7 @@ export default function Wishlists() {
                   </button>
 
                   <button
-                    className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
+                    className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
                     onClick={() =>
                       dispatch(
                         dispatchAction({

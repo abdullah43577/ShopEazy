@@ -54,7 +54,7 @@ export default function Cart() {
                 />
               </div>
 
-              <div>
+              <div className="w-full">
                 <div>
                   <p className="text-white">{product.title}</p>
                   <p className="mb-4 mt-1 text-bookmark">
@@ -127,7 +127,7 @@ export default function Cart() {
                   {/* Add to cart */}
 
                   <button
-                    className="h-[40px] w-[150px] rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
+                    className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
                     onClick={() =>
                       dispatch(
                         dispatchAction({

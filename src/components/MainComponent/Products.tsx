@@ -36,24 +36,27 @@ export default function Products() {
   };
 
   return (
-    <section className="grid_layout mt-6 w-[70%] text-white">
+    <section
+      id="shop_section"
+      className="grid_layout mx-auto mt-6 flex max-w-[1440px] px-8 text-white md:px-4"
+    >
       {products.map((product) => {
         return (
           <div
             onClick={() =>
               handlePageNavigate(
-                `/product/${encodeURIComponent(product.id)}/${encodeURIComponent(product.title)}`,
+                `/product/${encodeURIComponent(product.id)}/${encodeURIComponent(product.title.split(" ").join("_"))}`,
               )
             }
             key={product.id}
             className="cursor-pointer space-y-1"
           >
             <div className="relative">
-              <div className="flex max-h-[350px] min-h-[350px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
+              <div className="flex max-h-[300px] min-h-[300px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
                 {product.image && (
                   <MotionImage
-                    initial={{ scale: 0.7 }}
-                    whileHover={{ scale: 0.9 }}
+                    initial={{ scale: 0.5 }}
+                    whileHover={{ scale: 0.7 }}
                     transition={{ duration: 0.5 }}
                     src={product.image}
                     alt={product.title}
@@ -89,10 +92,12 @@ export default function Products() {
             </div>
 
             <p className="font-bold text-bookmark">New Clothing</p>
-            <h2 className="font-semidbold text-xl">
-              {truncateTxt({ txt: product.title, n: 30 })}
+            <h2 className="font-semidbold max-w-[400px] overflow-hidden text-ellipsis text-nowrap text-xl">
+              {product.title}
             </h2>
-            <p>{truncateTxt({ txt: product.description, n: 50 })}</p>
+            <p className="max-w-[400px] overflow-hidden text-ellipsis text-nowrap">
+              {product.description}
+            </p>
 
             <p className="pt-3 text-xl">$ {product.price}</p>
           </div>
