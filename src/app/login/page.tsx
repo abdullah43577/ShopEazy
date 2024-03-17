@@ -12,8 +12,10 @@ import Link from "next/link";
 import { MouseEvent } from "react";
 import { handleAxiosErrors } from "@/components/utils/handleAxiosErrors";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const { usernameOrEmail, password, showPassword } = useAppSelector(
     (state) => state.login,
   );
@@ -48,9 +50,8 @@ export default function Login() {
         },
       );
 
-      const data = response.data;
-      console.log(data);
       SwalAlert({ icon: "success", title: "User login successfully!" });
+      router.push("/profile");
     } catch (err) {
       handleAxiosErrors(err);
     }

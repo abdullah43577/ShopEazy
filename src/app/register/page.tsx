@@ -12,8 +12,10 @@ import { MouseEvent } from "react";
 import axios from "axios";
 import { SwalAlert } from "@/components/utils/SwalAlert";
 import { handleAxiosErrors } from "@/components/utils/handleAxiosErrors";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
   const { firstName, lastName, email, password, showPassword } = useAppSelector(
     (state) => state.register,
   );
@@ -49,9 +51,8 @@ export default function Register() {
         },
       );
 
-      const data = response.data;
-      console.log(data);
       SwalAlert({ icon: "success", title: "Account Created Successfully!" });
+      router.push("/profile");
     } catch (err) {
       handleAxiosErrors(err);
     }

@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { Provider } from "react-redux";
 import { store } from "../store";
 
-const paths = ["/register", "/login"];
+const paths = ["/register", "/login", "/profile", "/checkout"];
 
 interface Children {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default function ReduxProvider({ children }: Children) {
   const queryClient = new QueryClient();
   const pathname = usePathname();
 
-  const isRegisterOrLogin = paths.some((path) => path === pathname);
+  const isRegisterOrLogin = paths.some((path) => pathname.startsWith(path));
 
   return (
     <Provider store={store}>

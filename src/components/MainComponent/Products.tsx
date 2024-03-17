@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { truncateTxt } from "../utils/TruncateTxt";
 import { motion } from "framer-motion";
 import type { Products } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
