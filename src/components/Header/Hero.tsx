@@ -49,12 +49,12 @@ export default function Hero() {
       variants={animationVariants}
       initial="hidden"
       animate="visible"
-      className="mx-auto flex h-[80vh] max-w-[1000px] flex-col items-center justify-center space-y-6 bg-white dark:bg-black"
+      className="mx-auto mt-16 flex max-w-[1000px] flex-col items-center justify-center space-y-6 bg-white md:mt-0 md:h-[80vh] dark:bg-black"
     >
-      <h1 className="text-center text-6xl font-bold text-black dark:text-white">
+      <h1 className="text-center text-3xl font-bold text-black md:text-6xl dark:text-white">
         Discover Your Perfect Purchase Experience
       </h1>
-      <p className="text-center text-xl text-black dark:text-white">
+      <p className="text-center text-sm text-black sm:text-base md:text-xl dark:text-white">
         Welcome to{" "}
         <span className="font-bold italic text-bookmark">ShopEazy!</span>, where
         shopping meets satisfaction. Explore our curated collection of
@@ -69,7 +69,7 @@ export default function Hero() {
         </button>
       </Link>
 
-      <div className="flex items-center gap-2 text-white">
+      <div className="flex flex-wrap items-center justify-center gap-2 text-white">
         <p
           className={`flex h-[30px] w-[100px] cursor-pointer items-center justify-center rounded-[20px] border-[#4b4b4b] font-bold ${All ? "border" : "hover:border"}`}
           onClick={() =>

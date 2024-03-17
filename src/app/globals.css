@@ -24,12 +24,6 @@ body {
   width: 0px;
 }
 
-.grid_layout {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
 .navBar {
   background: rgba(13, 13, 13, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

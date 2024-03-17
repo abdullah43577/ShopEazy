@@ -69,7 +69,18 @@ export default function ProductDetails({ params }: Props) {
             <p>{product.rating?.count} reviews</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white">
+            <button
+              className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white"
+              onClick={() =>
+                dispatch(
+                  dispatchAction({
+                    productId: product.id,
+                    stateType: "wishlists",
+                    productType: "isAddedToWishlist",
+                  }),
+                )
+              }
+            >
               {product.isAddedToWishlist
                 ? "Remove from wishlist"
                 : "Add to wishlist"}

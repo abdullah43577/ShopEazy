@@ -23,8 +23,7 @@ export default function Register() {
     e.preventDefault();
 
     const formData = {
-      firstName,
-      lastName,
+      name: `${firstName} ${lastName}`,
       email,
       password,
     };
@@ -53,11 +52,8 @@ export default function Register() {
       console.log(data);
       SwalAlert({ icon: "success", title: "Account Created Successfully!" });
     } catch (err) {
-      console.error(err);
       handleAxiosErrors(err);
     }
-
-    console.log("all fields filled");
   };
 
   return (

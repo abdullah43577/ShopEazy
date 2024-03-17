@@ -20,7 +20,7 @@ export default function ModalWindow({ type }: ModalWindowProps) {
         initial={{ x: "100%" }}
         animate={{ x: isModalOpen ? 0 : "100%" }}
         transition={{ duration: 0.3 }}
-        className="fixed right-0 top-0 z-[200] h-full w-[40%] bg-darkElBg p-8"
+        className="fixed right-0 top-0 z-[200] h-full w-full bg-darkElBg p-8 md:w-[40%]"
       >
         <div
           className="ml-auto flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#4b4b4b]"

@@ -63,7 +63,7 @@ export default function Cart() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center md:gap-0">
                   <div className="flex items-center gap-4">
                     {/* chevron left */}
                     <div

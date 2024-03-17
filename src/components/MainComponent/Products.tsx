@@ -38,7 +38,7 @@ export default function Products() {
   return (
     <section
       id="shop_section"
-      className="grid_layout mx-auto mt-6 flex max-w-[1440px] px-8 text-white md:px-4"
+      className="mx-auto mt-6 grid max-w-[1440px] grid-cols-1 gap-8 px-8 text-white md:grid-cols-2 md:gap-4 md:px-4 lg:grid-cols-3"
     >
       {products.map((product) => {
         return (
@@ -52,7 +52,7 @@ export default function Products() {
             className="cursor-pointer space-y-1"
           >
             <div className="relative">
-              <div className="flex max-h-[300px] min-h-[300px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
+              <div className="flex h-[300px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
                 {product.image && (
                   <MotionImage
                     initial={{ scale: 0.5 }}
@@ -92,14 +92,14 @@ export default function Products() {
             </div>
 
             <p className="font-bold text-bookmark">New Clothing</p>
-            <h2 className="font-semidbold max-w-[400px] overflow-hidden text-ellipsis text-nowrap text-xl">
+            <h2 className="font-semidbold max-w-[400px] overflow-hidden text-ellipsis text-nowrap text-lg md:text-xl">
               {product.title}
             </h2>
-            <p className="max-w-[400px] overflow-hidden text-ellipsis text-nowrap">
+            <p className="max-w-[400px] overflow-hidden text-ellipsis text-nowrap text-sm md:text-base">
               {product.description}
             </p>
 
-            <p className="pt-3 text-xl">$ {product.price}</p>
+            <p className="pt-3 text-base md:text-xl">$ {product.price}</p>
           </div>
         );
       })}
