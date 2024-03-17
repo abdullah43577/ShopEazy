@@ -45,6 +45,7 @@ export default function Register() {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         },
       );
 
