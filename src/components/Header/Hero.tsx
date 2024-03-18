@@ -49,7 +49,7 @@ export default function Hero() {
       variants={animationVariants}
       initial="hidden"
       animate="visible"
-      className="mx-auto mt-16 flex max-w-[1000px] flex-col items-center justify-center space-y-6 bg-white md:mt-0 md:h-[80vh] dark:bg-black"
+      className="hero mx-auto mt-16 flex max-w-[1000px] flex-col items-center justify-center space-y-6 bg-white md:mt-0 md:h-[80vh] dark:bg-black"
     >
       <h1 className="text-center text-3xl font-bold text-black md:text-6xl dark:text-white">
         Discover Your Perfect Purchase Experience

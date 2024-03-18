@@ -1,7 +1,27 @@
+"use client";
+
+import useFetch from "@/hooks/useFetch";
+import { updateForm } from "@/redux/Profile/profileForm";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { ReactNode } from "react";
 
 export default function ProfileLayout({ children }: { children: ReactNode }) {
+  const { firstName, lastName } = useAppSelector((state) => state.profile);
+  const dispatch = useAppDispatch();
+
+  const id = JSON.parse(localStorage.getItem("currentUser") || "");
+
+  const { data } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/getuser/${id}`,
+    key: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/getuser/${id}`,
+  });
+
+  if (data) {
+    console.log(data, "data");
+    dispatch(updateForm(data.user));
+  }
+
   return (
     <section className="text-white">
       <div className="h-[200px] w-full bg-[#D1345B]">
@@ -9,14 +29,25 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-3">
             <div className="size-[80px] rounded-full bg-gray-400"></div>
             <div>
-              <h2 className="text-bold text-4xl">Michael Campbell</h2>
+              <h2 className="text-bold text-4xl">
+                {firstName} {lastName}
+              </h2>
               <p className="text-sm tracking-[5px]">New York, USA</p>
             </div>
           </div>
 
-          <button className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black">
-            Sign Out
-          </button>
+          <div className="flex gap-3">
+            <Link
+              href="/"
+              className="flex h-[40px] w-auto items-center justify-center rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black"
+            >
+              Home
+            </Link>
+
+            <button className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-white px-4 text-sm font-bold text-black">
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -33,12 +64,6 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
             className="cursor-pointer border-b border-b-gray-400 px-4 py-4 hover:bg-gray-600 hover:text-white"
           >
             Orders
-          </Link>
-          <Link
-            href="/profile/addresses"
-            className="cursor-pointer border-b border-b-gray-400 px-4 py-4 hover:bg-gray-600 hover:text-white"
-          >
-            Addresses
           </Link>
           <Link
             href="/profile/wishlists"

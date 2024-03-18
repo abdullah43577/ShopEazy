@@ -3,92 +3,31 @@
 import { useEffect, useState } from "react";
 import Hero from "./Hero";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import ModalWindow from "../Modal/Modal";
-import { toggleModal } from "@/redux/Modal/modalWindow";
-import useFetch from "@/hooks/useFetch";
-import type { Products } from "../utils/types";
-import {
-  updateCart,
-  updateProducts,
-  updateWishlist,
-} from "@/redux/Products/product";
-import { useMediaQuery } from "@react-hook/media-query";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { products, wishlists, cartItems } = useAppSelector(
-    (state) => state.products,
-  );
-  const isSmallScreen = useMediaQuery("(max-width:400px)");
+  const { wishlists, cartItems } = useAppSelector((state) => state.products);
 
-  const dispatch = useAppDispatch();
-  const [modalType, setModalType] = useState<
-    "wishlist" | "cart" | "notification" | null
-  >(null);
-
-  const { data } = useFetch({
-    endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
-    key: "products",
-  });
-
-  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
+  //? =============== HANDLE PAGE SCROLL SETTING THE NAVBAR TO FIXED ==================
 
   useEffect(() => {
-    const localStorageData = JSON.parse(
-      localStorage.getItem("products") || "[]",
-    );
-
-    const products: Products[] = localStorageData.length
-      ? localStorageData
-      : data?.length
-        ? data.map((product: Products) => ({
-            ...product,
-            isAddedToWishlist: false,
-            isAddedToCart: false,
-            quantity: 1,
-          }))
-        : [];
-
-    dispatch(updateProducts(products));
-  }, [data]);
-
-  useEffect(() => {
-    //? ============ INITIALIZE WISHLISTS ITEMS FROM LOCALSTORAGE ==============
-    const wishlistsItems = JSON.parse(
-      localStorage.getItem("wishlists") || "[]",
-    );
-
-    if (wishlistsItems.length) dispatch(updateWishlist(wishlistsItems));
-
-    //? ============ INITIALIZE CART ITEMS FROM LOCALSTORAGE ==============
-
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    if (cartItems.length) dispatch(updateCart(cartItems));
-
-    //? =============== HANDLE PAGE SCROLL SETTING THE NAVBAR TO FIXED ==================
+    const heroEl = document.querySelector(".hero") as HTMLDivElement;
+    const navbar = document.querySelector(".navBar") as HTMLDivElement;
 
     const handleScroll = function () {
       if (window.scrollY > 0) {
         setIsScrolled(true);
+        heroEl.style.paddingTop = `${navbar?.offsetHeight}px`;
       } else {
         setIsScrolled(false);
+        heroEl.style.paddingTop = "0px";
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleWishClick = function () {
-    dispatch(toggleModal());
-    setModalType("wishlist");
-  };
-
-  const handleCartClick = function () {
-    dispatch(toggleModal());
-    setModalType("cart");
-  };
 
   return (
     <header>
@@ -106,9 +45,9 @@ export default function Header() {
             <div className="flex h-[30px] items-center gap-3">
               <div className="flex items-center">
                 {/* Wishlists */}
-                <div
+                <Link
+                  href="/profile/wishlists"
                   className="relative flex size-[40px] cursor-pointer items-center justify-center rounded-[4px] hover:bg-darkElBg"
-                  onClick={handleWishClick}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -124,13 +63,13 @@ export default function Header() {
                   <div className="absolute right-[1px] top-1 flex size-4 items-center justify-center rounded-full bg-bookmark text-[10px] text-white md:-right-[1px] md:size-5">
                     {wishlists.length}
                   </div>
-                </div>
+                </Link>
 
                 {/* Cart */}
 
-                <div
+                <Link
+                  href="/profile/cart"
                   className="relative flex size-[40px] cursor-pointer items-center justify-center rounded-[4px] hover:bg-darkElBg"
-                  onClick={handleCartClick}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +85,7 @@ export default function Header() {
                   <div className="absolute right-[1px] top-1 flex size-4 items-center justify-center rounded-full bg-green-500 text-[10px] text-white md:-right-[1px] md:size-5">
                     {cartItems.length}
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* divider */}
@@ -193,9 +132,6 @@ export default function Header() {
 
         <Hero />
       </div>
-
-      {/* modal window */}
-      <ModalWindow type={modalType} />
     </header>
   );
 }

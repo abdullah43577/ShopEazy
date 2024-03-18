@@ -4,6 +4,7 @@ import productsSlice from "./Products/product";
 import modalSlice from "./Modal/modalWindow";
 import filterSlice from "./Filters/filters";
 import LoginSlice from "./Login/Login";
+import profileFormSlice from "./Profile/profileForm";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     products: productsSlice,
     modalWindow: modalSlice,
     filters: filterSlice,
+    profile: profileFormSlice,
   },
 });
 

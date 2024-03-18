@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import ReduxProvider from "@/redux/ReduxProvider/ReduxProvider";
+import WebLayout from "@/redux/ReduxProvider/WebLayout";
 
 export const metadata: Metadata = {
   title: "ShopEazy",
@@ -18,8 +19,10 @@ export default function RootLayout({
       <link rel="icon" href="/icon.png" sizes="any" />
       <body className="bg-white dark:bg-black" suppressHydrationWarning={true}>
         <ReduxProvider>
-          {children}
-          <Analytics />
+          <WebLayout>
+            {children}
+            <Analytics />
+          </WebLayout>
         </ReduxProvider>
       </body>
     </html>

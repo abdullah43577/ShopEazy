@@ -1,7 +1,9 @@
 import { SwalAlert } from "./SwalAlert";
 
 export function handleAxiosErrors(err: any) {
-  if (err.response.data.errors?.length) {
+  console.log(err);
+
+  if (err.response?.data.errors?.length) {
     const errors: { field: string; message: string }[] =
       err.response.data.errors;
     const errorMessage = errors.map((error) => error.message).join("\n \n");
@@ -11,11 +13,17 @@ export function handleAxiosErrors(err: any) {
       icon: "error",
       title: errorMessage,
     });
-  } else if (err.response.data.message) {
+  } else if (err.response?.data.message) {
     console.log(err.response.data.message);
     SwalAlert({
       icon: "error",
-      title: err.response.data.message,
+      title: err.response?.data.message,
+    });
+  } else if (err.message) {
+    console.log(err.message);
+    SwalAlert({
+      icon: "error",
+      title: err.message,
     });
   } else {
     console.log("An error occurred. Please try again later.");

@@ -50,12 +50,18 @@ export default function Login() {
         },
       );
 
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(response.data.user._id),
+      );
+      localStorage.setItem("shopEazyJWT", JSON.stringify(response.data.token));
       SwalAlert({ icon: "success", title: "User login successfully!" });
       router.push("/profile");
     } catch (err) {
       handleAxiosErrors(err);
     }
   };
+
   return (
     <section className="flex h-screen w-full items-center justify-center overflow-hidden">
       <motion.form

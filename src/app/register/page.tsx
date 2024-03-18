@@ -51,6 +51,11 @@ export default function Register() {
         },
       );
 
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(response.data.newUser._id),
+      );
+      localStorage.setItem("shopEazyJWT", JSON.stringify(response.data.token));
       SwalAlert({ icon: "success", title: "Account Created Successfully!" });
       router.push("/profile");
     } catch (err) {
