@@ -117,7 +117,7 @@ export default function Profile() {
             </label>
             <input
               type="number"
-              className="mt-2 h-[40px] w-[350px] rounded-[6px] border border-gray-400 bg-transparent px-4 capitalize outline-none"
+              className="mt-2 h-[40px] w-[350px] appearance-none rounded-[6px] border border-gray-400 bg-transparent px-4 capitalize outline-none"
               name="phone"
               value={formData.phone}
               onChange={handleUpdateInput}
@@ -158,9 +158,9 @@ export default function Profile() {
             Save
           </button>
 
-          <button className="mt-5 h-[40px] rounded-[8px] border-2 border-bookmark bg-bookmark px-8 text-sm font-bold text-white">
+          {/* <button className="mt-5 h-[40px] rounded-[8px] border-2 border-bookmark bg-bookmark px-8 text-sm font-bold text-white">
             Change Password
-          </button>
+          </button> */}
         </div>
       </form>
 

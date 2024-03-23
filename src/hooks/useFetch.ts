@@ -1,3 +1,5 @@
+"use client";
+
 import { handleAxiosErrors } from "@/components/utils/handleAxiosErrors";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -14,6 +16,7 @@ export default function useFetch({ endpoint, key }: useFetchProps) {
       const response = await axios.get(endpoint);
       return response.data;
     },
+    refetchInterval: 1000,
   });
 
   if (isPending) {

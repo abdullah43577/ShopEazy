@@ -26,32 +26,6 @@ export default function WebLayout({ children }: Children) {
 
   const isRegisterOrLogin = paths.some((path) => pathname.startsWith(path));
 
-  const { data } = useFetch({
-    endpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
-    key: "products",
-  });
-
-  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
-
-  useEffect(() => {
-    const localStorageData = JSON.parse(
-      localStorage.getItem("products") || "[]",
-    );
-
-    const products: Products[] = localStorageData.length
-      ? localStorageData
-      : data?.length
-        ? data.map((product: Products) => ({
-            ...product,
-            isAddedToWishlist: false,
-            isAddedToCart: false,
-            quantity: 1,
-          }))
-        : [];
-
-    dispatch(updateProducts(products));
-  }, [data]);
-
   useEffect(() => {
     //? ============ INITIALIZE WISHLISTS ITEMS FROM LOCALSTORAGE ==============
     const wishlistsItems = JSON.parse(

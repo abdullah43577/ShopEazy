@@ -4,23 +4,25 @@ import useFetch from "@/hooks/useFetch";
 import { updateForm } from "@/redux/Profile/profileForm";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 export default function ProfileLayout({ children }: { children: ReactNode }) {
   const { firstName, lastName } = useAppSelector((state) => state.profile);
   const dispatch = useAppDispatch();
 
-  const id = JSON.parse(localStorage.getItem("currentUser") || "");
+  const id =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("currentUser") || "")
+      : null;
 
   const { data } = useFetch({
     endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/getuser/${id}`,
     key: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/getuser/${id}`,
   });
 
-  if (data) {
-    console.log(data, "data");
-    dispatch(updateForm(data.user));
-  }
+  useEffect(() => {
+    if (data) dispatch(updateForm(data?.user));
+  }, [data]);
 
   return (
     <section className="text-white">

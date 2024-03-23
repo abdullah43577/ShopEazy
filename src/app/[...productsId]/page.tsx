@@ -6,17 +6,18 @@ import Image from "next/image";
 import Rating from "@/components/utils/Rating";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
+import useFetch from "@/hooks/useFetch";
 import { dispatchAction } from "@/redux/Products/product";
 
 interface Props {
-  params: { productsId: [string, string, string] };
+  params: { productsId: [string, string] };
 }
 
 export default function ProductDetails({ params }: Props) {
-  const [product, setProduct] = useState<Products>({
+  const [products, setProducts] = useState<Products>({
     category: "",
     description: "",
-    id: 0,
+    _id: 0,
     image: "",
     price: 0,
     rating: { rate: 0, count: 0 },
@@ -25,31 +26,32 @@ export default function ProductDetails({ params }: Props) {
     isAddedToCart: false,
     quantity: 1,
   });
-  const { products, cartItems } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+
+  const { data } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${params.productsId[1]}`,
+    key: "products_detail",
+  });
 
   const MotionImage = motion(Image);
 
   useEffect(() => {
-    const id = Number(params.productsId[1]);
-    const currentProduct = products.find((product) => product.id === id);
-
-    if (currentProduct) {
-      setProduct(currentProduct);
+    if (data) {
+      setProducts(data.product);
     }
-  }, [params.productsId, products]);
+  }, [params.productsId, data]);
 
   return (
     <section>
       <div className="mx-auto flex max-w-[1200px] items-stretch justify-between gap-5 rounded-[8px] border border-[#4b4b4b] p-4 px-8 text-white md:px-4">
         <div className="flex max-h-[350px] min-h-[350px] min-w-[500px] cursor-pointer items-center justify-center overflow-hidden rounded-[6px] bg-white">
-          {product.image && (
+          {products.image && (
             <MotionImage
               initial={{ scale: 0.7 }}
               whileHover={{ scale: 0.9 }}
               transition={{ duration: 0.5 }}
-              src={product.image}
-              alt={product.title}
+              src={products.image}
+              alt={products.title}
               priority
               width={300}
               height={200}
@@ -59,14 +61,14 @@ export default function ProductDetails({ params }: Props) {
         </div>
 
         <div className="space-y-3">
-          <p className="text-2xl font-bold">{product.title}</p>
+          <p className="text-2xl font-bold">{products.title}</p>
           <p className="text-lg font-semibold text-bookmark">
-            ${product.price}
+            ${products.price}
           </p>
-          <p className="">{product.description}</p>
+          <p className="">{products.description}</p>
           <div className="flex items-center gap-3 pb-4 pt-6">
-            <Rating rate={product.rating?.rate} />
-            <p>{product.rating?.count} reviews</p>
+            <Rating rate={products.rating?.rate} />
+            <p>{products.rating?.count} reviews</p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -74,14 +76,14 @@ export default function ProductDetails({ params }: Props) {
               onClick={() =>
                 dispatch(
                   dispatchAction({
-                    productId: product.id,
+                    productId: products._id,
                     stateType: "wishlists",
                     productType: "isAddedToWishlist",
                   }),
                 )
               }
             >
-              {product.isAddedToWishlist
+              {products.isAddedToWishlist
                 ? "Remove from wishlist"
                 : "Add to wishlist"}
             </button>
@@ -91,14 +93,14 @@ export default function ProductDetails({ params }: Props) {
               onClick={() =>
                 dispatch(
                   dispatchAction({
-                    productId: product.id,
+                    productId: products._id,
                     stateType: "cartItems",
                     productType: "isAddedToCart",
                   }),
                 )
               }
             >
-              {product.isAddedToCart ? "Remove from cart" : "Add to cart"}
+              {products.isAddedToCart ? "Remove from cart" : "Add to cart"}
             </button>
           </div>
         </div>

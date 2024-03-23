@@ -1,6 +1,7 @@
 import { SwalAlert } from "@/components/utils/SwalAlert";
 import type { Products } from "@/components/utils/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { updateDispatchDB } from "./updateDispatch";
 
 type InitialType = { productId: number; quantity: number }[];
 
@@ -39,10 +40,9 @@ export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    //  ? UPDATE PRODUCTS ARRAY
     updateProducts: (state, action: PayloadAction<Products[]>) => {
-      const { payload } = action;
-      state.products = payload;
-      localStorage.setItem("products", JSON.stringify(state.products));
+      state.products = action.payload;
     },
 
     // ? WISHLIST CODE IMPLEMENTATION
@@ -85,7 +85,7 @@ export const productsSlice = createSlice({
         (obj) => obj.productId === productId,
       );
       const productIndex = state.products.findIndex(
-        (obj) => obj.id === productId,
+        (obj) => obj._id === productId,
       );
 
       const swalName = stateType === "wishlists" ? "Wishlist" : "Cart";
@@ -93,6 +93,7 @@ export const productsSlice = createSlice({
       if (itemIndex !== -1) {
         state[stateType].splice(itemIndex, 1);
         state.products[productIndex][productType] = false;
+
         SwalAlert({
           icon: "info",
           title: `Item Removed from ${swalName}`,
@@ -100,6 +101,10 @@ export const productsSlice = createSlice({
       } else {
         state[stateType].push({ productId: productId, quantity: 1 });
         state.products[productIndex][productType] = true;
+
+        // update user db
+        updateDispatchDB({ productId, stateType, productType });
+
         SwalAlert({
           icon: "success",
           title: `Item Added to ${swalName}`,

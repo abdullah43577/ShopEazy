@@ -26,8 +26,8 @@ export const profileFormSlice = createSlice({
     updateForm: (state, action: PayloadAction<InitialState>) => {
       const { payload } = action;
 
-      state.firstName = payload.name.split(" ")[0];
-      state.lastName = payload.name.split(" ")[1];
+      state.firstName = payload.name?.split(" ")[0];
+      state.lastName = payload.name?.split(" ")[1];
       state.username = payload.username;
       state.phone = payload.phone;
       state.address = payload.address;

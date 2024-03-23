@@ -20,7 +20,7 @@ export default function Wishlists() {
 
     wishlists.forEach((wishlist) => {
       const product = products.find(
-        (product) => product.id === wishlist.productId,
+        (product) => product._id === wishlist.productId,
       );
 
       if (product) {
@@ -41,7 +41,7 @@ export default function Wishlists() {
       </h2>
 
       {wishlistsData?.map((product) => (
-        <div key={product.id} className="rounded-[12px] bg-black p-4">
+        <div key={product._id} className="rounded-[12px] bg-black p-4">
           <div className="flex items-start gap-8">
             <div className="flex size-[200px] items-center justify-center overflow-hidden rounded-[6px] bg-white">
               <MotionImage
@@ -70,7 +70,7 @@ export default function Wishlists() {
                   onClick={() =>
                     dispatch(
                       quantityChange({
-                        productId: product.id,
+                        productId: product._id,
                         stateType: "wishlists",
                         type: "decrement",
                       }),
@@ -100,7 +100,7 @@ export default function Wishlists() {
                   onClick={() =>
                     dispatch(
                       quantityChange({
-                        productId: product.id,
+                        productId: product._id,
                         stateType: "wishlists",
                         type: "increment",
                       }),
@@ -130,7 +130,7 @@ export default function Wishlists() {
                   onClick={() =>
                     dispatch(
                       dispatchAction({
-                        productId: product.id,
+                        productId: product._id,
                         stateType: "wishlists",
                         productType: "isAddedToWishlist",
                       }),
@@ -145,14 +145,14 @@ export default function Wishlists() {
                   onClick={() =>
                     dispatch(
                       dispatchAction({
-                        productId: product.id,
+                        productId: product._id,
                         stateType: "cartItems",
                         productType: "isAddedToCart",
                       }),
                     )
                   }
                 >
-                  {cartItems.some((item) => item.productId === product.id)
+                  {cartItems.some((item) => item.productId === product._id)
                     ? "Remove from cart"
                     : "Add to cart"}
                 </button>

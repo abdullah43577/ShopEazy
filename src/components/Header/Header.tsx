@@ -12,16 +12,11 @@ export default function Header() {
   //? =============== HANDLE PAGE SCROLL SETTING THE NAVBAR TO FIXED ==================
 
   useEffect(() => {
-    const heroEl = document.querySelector(".hero") as HTMLDivElement;
-    const navbar = document.querySelector(".navBar") as HTMLDivElement;
-
     const handleScroll = function () {
       if (window.scrollY > 0) {
         setIsScrolled(true);
-        heroEl.style.paddingTop = `${navbar?.offsetHeight}px`;
       } else {
         setIsScrolled(false);
-        heroEl.style.paddingTop = "0px";
       }
     };
 

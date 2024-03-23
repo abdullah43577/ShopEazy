@@ -17,7 +17,9 @@ export default function Cart() {
     let arr: Products[] = [];
 
     cartItems.forEach((item) => {
-      const product = products.find((product) => product.id === item.productId);
+      const product = products.find(
+        (product) => product._id === item.productId,
+      );
 
       if (product) {
         arr.push({
@@ -39,7 +41,7 @@ export default function Cart() {
 
         {cartData.map((product) => (
           <div
-            key={product.id}
+            key={product._id}
             className="max-w-[700px] rounded-[12px] bg-black p-4"
           >
             <div className="flex items-start gap-8">
@@ -74,7 +76,7 @@ export default function Cart() {
                       onClick={() =>
                         dispatch(
                           quantityChange({
-                            productId: product.id,
+                            productId: product._id,
                             stateType: "cartItems",
                             type: "decrement",
                           }),
@@ -104,7 +106,7 @@ export default function Cart() {
                       onClick={() =>
                         dispatch(
                           quantityChange({
-                            productId: product.id,
+                            productId: product._id,
                             stateType: "cartItems",
                             type: "increment",
                           }),
@@ -134,7 +136,7 @@ export default function Cart() {
                     onClick={() =>
                       dispatch(
                         dispatchAction({
-                          productId: product.id,
+                          productId: product._id,
                           stateType: "cartItems",
                           productType: "isAddedToCart",
                         }),
@@ -160,7 +162,7 @@ export default function Cart() {
 
         {cartData.map((product, i) => (
           <div
-            key={product.id}
+            key={product._id}
             className="mb-4 flex items-center justify-between"
           >
             <p className="max-w-[200px] overflow-hidden text-ellipsis text-nowrap">

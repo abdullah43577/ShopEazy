@@ -3,18 +3,34 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Products } from "../utils/types";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { MouseEvent } from "react";
-import { dispatchAction } from "@/redux/Products/product";
+import { MouseEvent, useEffect, useState } from "react";
+import { dispatchAction, updateProducts } from "@/redux/Products/product";
+import useFetch from "@/hooks/useFetch";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { updateDispatchDB } from "@/redux/Products/updateDispatch";
 
 export default function Products() {
   const router = useRouter();
-
   const MotionImage = motion(Image);
-
+  // const [products, setProducts] = useState<Products[]>([]);
   const { products } = useAppSelector((state) => state.products);
+
+  const { data } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
+    key: "products",
+  });
+
   const dispatch = useAppDispatch();
+
+  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
+
+  useEffect(() => {
+    if (data) {
+      // setProducts(data.products);
+      dispatch(updateProducts(data.products));
+    }
+  }, [data]);
 
   //? ================================== BUTTON NAVIGATION==================================
 
@@ -22,16 +38,14 @@ export default function Products() {
     router.push(url);
   };
 
-  const handleAddToWishList = (e: MouseEvent, productId: number) => {
+  const handleAddToWishList = async (e: MouseEvent, productId: number) => {
     e.stopPropagation(); //? prevent event from bubbling to parent
 
-    dispatch(
-      dispatchAction({
-        productId: productId,
-        stateType: "wishlists",
-        productType: "isAddedToWishlist",
-      }),
-    );
+    await updateDispatchDB({
+      productId,
+      stateType: "wishlists",
+      productType: "isAddedToWishlist",
+    });
   };
 
   return (
@@ -42,12 +56,8 @@ export default function Products() {
       {products.map((product) => {
         return (
           <div
-            onClick={() =>
-              handlePageNavigate(
-                `/product/${encodeURIComponent(product.id)}/${encodeURIComponent(product.title.split(" ").join("_"))}`,
-              )
-            }
-            key={product.id}
+            onClick={() => handlePageNavigate(`/product/${product._id}`)}
+            key={product._id}
             className="cursor-pointer space-y-1"
           >
             <div className="relative">
@@ -69,7 +79,7 @@ export default function Products() {
 
               <div
                 className="absolute right-5 top-5 flex size-[40px] items-center justify-center rounded-[6px] bg-gray-400"
-                onClick={(e) => handleAddToWishList(e, product.id)}
+                onClick={(e) => handleAddToWishList(e, product._id)}
               >
                 <motion.svg
                   initial={{ scale: 1 }}
