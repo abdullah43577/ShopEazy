@@ -1,10 +1,12 @@
 "use client";
 
 import { updateFilter } from "@/redux/Filters/filters";
-import { dispatchFilter } from "@/redux/Products/product";
+import { updateProducts } from "@/redux/Products/product";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import axios from "axios";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { handleAxiosErrors } from "../utils/handleAxiosErrors";
 
 const animationVariants = {
   hidden: {
@@ -39,9 +41,20 @@ export default function Hero() {
   );
   const dispatch = useAppDispatch();
 
-  const handleDispatchFilter = ({ filter, categoryName }: Filter) => {
-    dispatch(updateFilter(filter));
-    dispatch(dispatchFilter(categoryName));
+  const handleDispatchFilter = async ({ filter, categoryName }: Filter) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/filter/${categoryName}`,
+      );
+      dispatch(
+        updateProducts(
+          response.data.products ?? response.data.filteredProducts,
+        ),
+      );
+      dispatch(updateFilter(filter));
+    } catch (err) {
+      handleAxiosErrors(err);
+    }
   };
 
   return (

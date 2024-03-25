@@ -26,19 +26,43 @@ export default function WebLayout({ children }: Children) {
 
   const isRegisterOrLogin = paths.some((path) => pathname.startsWith(path));
 
+  const userId = JSON.parse(
+    localStorage.getItem("currentUser") || "{}",
+  )?.replaceAll(/["]+/g, "");
+
+  const { data: allProducts } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
+    key: "products",
+  });
+
+  const { data: wishlistItems } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/get_actions/wishlists/${userId}`,
+    key: "wishlistItems",
+  });
+
+  const { data: cartProducts } = useFetch({
+    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/get_actions/cartItems/${userId}`,
+    key: "wishlistItems",
+  });
+
+  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
+
   useEffect(() => {
-    //? ============ INITIALIZE WISHLISTS ITEMS FROM LOCALSTORAGE ==============
-    const wishlistsItems = JSON.parse(
-      localStorage.getItem("wishlists") || "[]",
-    );
+    if (allProducts) dispatch(updateProducts(allProducts.products));
+  }, [allProducts]);
 
-    if (wishlistsItems.length) dispatch(updateWishlist(wishlistsItems));
+  //? ============ UPDATE WISHLISTS ITEMS FROM DATABASE ==============
+  useEffect(() => {
+    if (wishlistItems) {
+      console.log(wishlistItems, "wishlists");
+      dispatch(updateWishlist(wishlistItems.wishlists));
+    }
+  }, [wishlistItems]);
 
-    //? ============ INITIALIZE CART ITEMS FROM LOCALSTORAGE ==============
-
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    if (cartItems.length) dispatch(updateCart(cartItems));
-  }, []);
+  // //? ============ UPDATE CART ITEMS FROM DATABASE ==============
+  // useEffect(() => {
+  //   if (cartProducts) dispatch(updateCart(cartProducts.wishlists));
+  // }, [cartProducts]);
 
   return (
     <>

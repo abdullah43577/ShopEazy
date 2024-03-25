@@ -39,7 +39,7 @@ export const updateDispatchDB = async function ({
         },
       );
 
-      if (response.status === 204) {
+      if (response.data.type === "removal") {
         SwalAlert({
           icon: "info",
           title: `Item Removed from ${stateType} successfully!`,
@@ -52,10 +52,10 @@ export const updateDispatchDB = async function ({
       }
 
       const { data } = response;
-      console.log(response);
+      console.log("response", response);
 
-      // localStorage.setItem("wishlists", JSON.stringify(result))
-      // localStorage.setItem('cartItems', JSON.stringify(result));
+      // localStorage.setItem(data.category, JSON.stringify(data));
+      // localStorage.setItem("cartItems", JSON.stringify(result));
     }
   } catch (err) {
     handleAxiosErrors(err);

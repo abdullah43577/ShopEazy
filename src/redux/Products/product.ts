@@ -1,7 +1,5 @@
-import { SwalAlert } from "@/components/utils/SwalAlert";
 import type { Products } from "@/components/utils/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { updateDispatchDB } from "./updateDispatch";
 
 type InitialType = { productId: number; quantity: number }[];
 
@@ -78,59 +76,59 @@ export const productsSlice = createSlice({
 
     // ? UPDATING THE WISHLIST AND CART ITEMS
 
-    dispatchAction: (state, action: PayloadAction<DispatchAction>) => {
-      const { productId, stateType, productType } = action.payload;
+    // dispatchAction: (state, action: PayloadAction<DispatchAction>) => {
+    //   const { productId, stateType, productType } = action.payload;
 
-      const itemIndex = state[stateType].findIndex(
-        (obj) => obj.productId === productId,
-      );
-      const productIndex = state.products.findIndex(
-        (obj) => obj._id === productId,
-      );
+    //   const itemIndex = state[stateType].findIndex(
+    //     (obj) => obj.productId === productId,
+    //   );
+    //   const productIndex = state.products.findIndex(
+    //     (obj) => obj._id === productId,
+    //   );
 
-      const swalName = stateType === "wishlists" ? "Wishlist" : "Cart";
+    //   const swalName = stateType === "wishlists" ? "Wishlist" : "Cart";
 
-      if (itemIndex !== -1) {
-        state[stateType].splice(itemIndex, 1);
-        state.products[productIndex][productType] = false;
+    //   if (itemIndex !== -1) {
+    //     state[stateType].splice(itemIndex, 1);
+    //     state.products[productIndex][productType] = false;
 
-        SwalAlert({
-          icon: "info",
-          title: `Item Removed from ${swalName}`,
-        });
-      } else {
-        state[stateType].push({ productId: productId, quantity: 1 });
-        state.products[productIndex][productType] = true;
+    //     SwalAlert({
+    //       icon: "info",
+    //       title: `Item Removed from ${swalName}`,
+    //     });
+    //   } else {
+    //     state[stateType].push({ productId: productId, quantity: 1 });
+    //     state.products[productIndex][productType] = true;
 
-        // update user db
-        updateDispatchDB({ productId, stateType, productType });
+    //     // update user db
+    //     updateDispatchDB({ productId, stateType, productType });
 
-        SwalAlert({
-          icon: "success",
-          title: `Item Added to ${swalName}`,
-        });
-      }
+    //     SwalAlert({
+    //       icon: "success",
+    //       title: `Item Added to ${swalName}`,
+    //     });
+    //   }
 
-      // ? UPDATE LOCAL STORAGE
-      localStorage.setItem(stateType, JSON.stringify(state[stateType]));
-      localStorage.setItem("products", JSON.stringify(state.products));
-    },
+    //   // ? UPDATE LOCAL STORAGE
+    //   localStorage.setItem(stateType, JSON.stringify(state[stateType]));
+    //   localStorage.setItem("products", JSON.stringify(state.products));
+    // },
 
-    dispatchFilter: (state, action: PayloadAction<Filter>) => {
-      const { payload } = action;
+    // dispatchFilter: (state, action: PayloadAction<Filter>) => {
+    //   const { payload } = action;
 
-      const localStorageData: Products[] = JSON.parse(
-        localStorage.getItem("products") || "[]",
-      );
+    //   const localStorageData: Products[] = JSON.parse(
+    //     localStorage.getItem("products") || "[]",
+    //   );
 
-      if (payload === "all") {
-        state.products = localStorageData.length ? localStorageData : [];
-      } else {
-        state.products = localStorageData.filter(
-          (product) => product.category === payload,
-        );
-      }
-    },
+    //   if (payload === "all") {
+    //     state.products = localStorageData.length ? localStorageData : [];
+    //   } else {
+    //     state.products = localStorageData.filter(
+    //       (product) => product.category === payload,
+    //     );
+    //   }
+    // },
   },
 });
 
@@ -140,8 +138,8 @@ export const {
   updateWishlist,
   quantityChange,
   updateCart,
-  dispatchAction,
-  dispatchFilter,
+  // dispatchAction,
+  // dispatchFilter,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

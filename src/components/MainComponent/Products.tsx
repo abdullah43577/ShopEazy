@@ -5,32 +5,30 @@ import { motion } from "framer-motion";
 import type { Products } from "../utils/types";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState } from "react";
-import { dispatchAction, updateProducts } from "@/redux/Products/product";
+import { updateProducts } from "@/redux/Products/product";
 import useFetch from "@/hooks/useFetch";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { updateDispatchDB } from "@/redux/Products/updateDispatch";
+import { updateDispatchDB } from "@/components/utils/updateDispatch";
 
 export default function Products() {
   const router = useRouter();
   const MotionImage = motion(Image);
-  // const [products, setProducts] = useState<Products[]>([]);
   const { products } = useAppSelector((state) => state.products);
 
-  const { data } = useFetch({
-    endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
-    key: "products",
-  });
+  // const { data } = useFetch({
+  //   endpoint: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products`,
+  //   key: "products",
+  // });
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-  //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
+  // //? ================== UPDATE PRODUCTS ARRAY WITH ADDED ITEMS IN STATE ==================
 
-  useEffect(() => {
-    if (data) {
-      // setProducts(data.products);
-      dispatch(updateProducts(data.products));
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     dispatch(updateProducts(data.products));
+  //   }
+  // }, [data]);
 
   //? ================================== BUTTON NAVIGATION==================================
 

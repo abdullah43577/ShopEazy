@@ -16,7 +16,7 @@ export default function useFetch({ endpoint, key }: useFetchProps) {
       const response = await axios.get(endpoint);
       return response.data;
     },
-    refetchInterval: 1000,
+    // refetchInterval: 1000,
   });
 
   if (isPending) {

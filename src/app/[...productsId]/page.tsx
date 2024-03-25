@@ -4,10 +4,10 @@ import type { Products } from "@/components/utils/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Rating from "@/components/utils/Rating";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import useFetch from "@/hooks/useFetch";
-import { dispatchAction } from "@/redux/Products/product";
+import { updateDispatchDB } from "@/components/utils/updateDispatch";
 
 interface Props {
   params: { productsId: [string, string] };
@@ -74,13 +74,11 @@ export default function ProductDetails({ params }: Props) {
             <button
               className="h-[40px] w-auto rounded-[8px] border-2 border-white bg-transparent px-4 font-bold text-white"
               onClick={() =>
-                dispatch(
-                  dispatchAction({
-                    productId: products._id,
-                    stateType: "wishlists",
-                    productType: "isAddedToWishlist",
-                  }),
-                )
+                updateDispatchDB({
+                  productId: products._id,
+                  stateType: "wishlists",
+                  productType: "isAddedToWishlist",
+                })
               }
             >
               {products.isAddedToWishlist
@@ -91,13 +89,11 @@ export default function ProductDetails({ params }: Props) {
             <button
               className="h-[40px] rounded-[8px] border-2 border-white bg-white px-4 font-bold text-darkElBg"
               onClick={() =>
-                dispatch(
-                  dispatchAction({
-                    productId: products._id,
-                    stateType: "cartItems",
-                    productType: "isAddedToCart",
-                  }),
-                )
+                updateDispatchDB({
+                  productId: products._id,
+                  stateType: "cartItems",
+                  productType: "isAddedToCart",
+                })
               }
             >
               {products.isAddedToCart ? "Remove from cart" : "Add to cart"}
